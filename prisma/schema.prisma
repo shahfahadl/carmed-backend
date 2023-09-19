@@ -15,6 +15,7 @@ model User {
   cnic String
   gender String
   profile String
+  number String
 }
 
 model Vendor {
@@ -42,6 +43,7 @@ model Order {
   userName String
   requests Json
   status String
+  number String
   vendorId String
   vendorName String
   rating Int

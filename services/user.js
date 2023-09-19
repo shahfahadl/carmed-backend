@@ -23,7 +23,8 @@ const createUser = async (user = {}) => {
       password: hashedPassword,
       cnic: user.cnic,
       gender: user.gender,
-      profile: user.profile
+      profile: user.profile,
+      number: user.number
     },
   });
 
@@ -58,20 +59,12 @@ const loginUser = async (user = {}) => {
 const createOrder = async (order) => {
   const createdOrder = await prisma.order.create({
     data: {
-      problem: order.problem,
-      bid: order.bid,
-      carType: order.carType,
-      location: order.location,
-      userId: order.userId,
-      userName: order.userName,
-      requests: order.requests,
+      ...order,
       status: "pending",
       vendorName: "null",
       vendorId: "null",
-      latLng: order.latLng,
       rating: 0,
       review: "",
-      userProfile: order.userProfile,
       vendorProfile: "",
       time: order.time || '',
       date: order.date || ''
@@ -94,6 +87,7 @@ const createOrder = async (order) => {
     userProfile: createdOrder.userProfile,
     vendorProfile: createdOrder.vendorProfile,
     latLng: createdOrder.latLng,
+    number: createdOrder.number,
     date: createdOrder.date,
     time: createdOrder.time
   });
@@ -137,6 +131,7 @@ const acceptRequest = async (order) => {
       vendorId: order.vendorId,
       vendorName: order.vendorName,
       vendorProfile: order.vendorProfile,
+      vendorNumber: order.vendorNumber,
       bid: order.bid,
     });
 

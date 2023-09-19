@@ -63,9 +63,10 @@ const createOrder = async (order) => {
       status: "pending",
       vendorName: "null",
       vendorId: "null",
+      vendorProfile: "",
+      vendorContact: "",
       rating: 0,
       review: "",
-      vendorProfile: "",
       time: order.time || '',
       date: order.date || ''
     },

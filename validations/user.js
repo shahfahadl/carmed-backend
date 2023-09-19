@@ -23,8 +23,8 @@ const schemas = {
       profile: Joi.string().allow("").messages({
         "any.required": "Profile is required",
       }),
-      number: Joi.string().allow("").messages({
-        "any.required": "Number is required",
+      contact: Joi.string().allow("").messages({
+        "any.required": "Contact is required",
       }),
     });
 

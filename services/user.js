@@ -24,7 +24,7 @@ const createUser = async (user = {}) => {
       cnic: user.cnic,
       gender: user.gender,
       profile: user.profile,
-      number: user.number
+      contact: user.contact
     },
   });
 
@@ -87,7 +87,7 @@ const createOrder = async (order) => {
     userProfile: createdOrder.userProfile,
     vendorProfile: createdOrder.vendorProfile,
     latLng: createdOrder.latLng,
-    number: createdOrder.number,
+    contact: createdOrder.contact,
     date: createdOrder.date,
     time: createdOrder.time
   });
@@ -131,7 +131,7 @@ const acceptRequest = async (order) => {
       vendorId: order.vendorId,
       vendorName: order.vendorName,
       vendorProfile: order.vendorProfile,
-      vendorNumber: order.vendorNumber,
+      vendorContact: order.vendorContact,
       bid: order.bid,
     });
 

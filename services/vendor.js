@@ -69,7 +69,7 @@ const acceptOrder = async (data) => {
       status: "process",
       vendorId: data.vendorId,
       vendorName: data.vendorName,
-      vendorNumber: data.vendorNumber,
+      vendorContact: data.vendorContact,
     });
 
   return dbOrder.id;

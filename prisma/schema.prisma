@@ -15,7 +15,7 @@ model User {
   cnic String
   gender String
   profile String
-  number String
+  contact String
 }
 
 model Vendor {
@@ -43,13 +43,14 @@ model Order {
   userName String
   requests Json
   status String
-  number String
+  contact String
   vendorId String
   vendorName String
   rating Int
   review String
   userProfile String
   vendorProfile String
+  vendorContact String
   latLng Json
   time String?
   date String?

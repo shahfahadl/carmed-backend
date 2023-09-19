@@ -18,7 +18,7 @@ app.use(function (err, req, res) {
     response = { error: err.message };
     err.message = err.status + ":" + err.message;
     err.code && (response.code = err.code);
-    res.status(err.status || 500).json(response);
+    res.status?.(err.status || 500).json(response);
   }
 });
 

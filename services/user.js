@@ -97,7 +97,6 @@ const createOrder = async (order) => {
 };
 
 const updateOrder = async (order) => {
-  console.log('order: ', order)
   const dbOrder = await db
     .collection(firebaseConstants.orders)
     .doc(order.id)

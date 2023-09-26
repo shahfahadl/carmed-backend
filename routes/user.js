@@ -9,6 +9,8 @@ const router = () => {
     userRouter.route('/cancel-order').post(userController.cancelOrder);
     userRouter.route('/accept-request').post(userController.acceptRequest);
     userRouter.route('/give-rating').post(userController.giveRating);
+    userRouter.route('/generate-otp').post(userController.generateOTP);
+    userRouter.route('/reset-password').post(userController.resetPassword);
     return userRouter;
 };
 

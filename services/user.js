@@ -3,8 +3,16 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { firebaseConstants } = require("../static/constants");
 const { db } = require("./firebase");
+const otpService = require("./otp");
+const mailService = require("./mail");
+const htmlTemplate = require("./email");
 
 const createUser = async (user = {}) => {
+  const otpValidated = await otpService.validateToken(user.otp);
+  
+  if(otpValidated === null){
+    return null
+  }
 
   const existingUser = await prisma.user.findFirst({
     where: {
@@ -12,7 +20,13 @@ const createUser = async (user = {}) => {
     },
   });
 
-  if (existingUser) return { error: "user already exist" }
+  const existingVendor = await prisma.vendor.findFirst({
+    where: {
+      email: user.email,
+    },
+  });
+
+  if (existingUser || existingVendor) return { error: "user already exist" }
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(user.password, salt);
@@ -165,6 +179,78 @@ const giveRating = async (order) => {
   return updatedVendor.id;
 };
 
+const generateOTP = async (mail) => {
+  const otp = otpService.generateToken();
+  const html = htmlTemplate.emailTemplate(`
+    Hope this email finds you well<br/>This is your OTP <b>${otp}</b> for carmed!
+  `)
+  mailService.sendEmail(html, mail, "CarMed OTP");
+  return otp;
+};
+
+function generateRandomPassword(length) {
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+
+  return password;
+}
+
+const resetPassword = async (mail) => {
+
+  const randomPassword = generateRandomPassword(8);
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(randomPassword, salt);
+
+  const userExist = await prisma.user.findFirst({
+    where: { email: mail },
+  });
+
+  if(userExist){
+    delete userExist.id
+
+    await prisma.user.update({
+      where: {email: mail},
+      data: {
+        ...userExist,
+        password: hashedPassword
+      }
+    })
+  }
+
+  const vendorExist = await prisma.vendor.findFirst({
+    where: { email: mail },
+  });
+
+  if(vendorExist){
+    delete vendorExist.id
+    await prisma.vendor.update({
+      where: {email: mail},
+      data: {
+        ...vendorExist,
+        password: hashedPassword
+      }
+    })
+  }
+
+  if(!vendorExist && !userExist){
+    return null;
+  }
+
+  const html = htmlTemplate.emailTemplate(`
+    It happens to best of us<br/>
+    Password has been resetted for your e-mail ${mail}<br/>
+    <br/>
+    your new password is <b>${randomPassword}</b>
+  `)
+  mailService.sendEmail(html, mail, "CarMed Reset Password");
+  return userExist || vendorExist;
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -173,4 +259,6 @@ module.exports = {
   acceptRequest,
   giveRating,
   updateOrder,
+  generateOTP,
+  resetPassword
 };

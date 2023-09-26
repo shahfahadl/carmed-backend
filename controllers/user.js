@@ -110,7 +110,25 @@ const giveRating = async (req, res, next) => {
   }
 };
 
+const generateOTP = async (req, res, next) => {
+  const mail = req.body.email;
+  try {
+    await User.generateOTP(mail);
+    res.status(200).json('OTP sent');
+  } catch (error) {
+    next(error);
+  }
+};
 
+const resetPassword = async (req, res, next) => {
+  const mail = req.body.email;
+  try {
+    await User.resetPassword(mail);
+    res.status(200).json('Password Resetted');
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createUser,
@@ -119,5 +137,7 @@ module.exports = {
   cancelOrder,
   acceptRequest,
   giveRating,
-  updateOrder
+  updateOrder,
+  generateOTP,
+  resetPassword
 }

@@ -26,6 +26,9 @@ const schemas = {
       contact: Joi.string().allow("").messages({
         "any.required": "Contact is required",
       }),
+      otp: Joi.string().allow("").messages({
+        "any.required": "OTP is required",
+      }),
     });
 
     return parseJoiError(Validation.validate(data));

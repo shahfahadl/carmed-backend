@@ -1,8 +1,9 @@
 const awsRouter = require('express').Router();
 const awsController = require('../controllers/aws');
+const authController = require('../controllers/auth');
 
 const router = () => {
-    awsRouter.route('/get-signed-url').put(awsController.getSignedUrl);
+    awsRouter.put('/get-signed-url', authController.validate, awsController.getSignedUrl);
     return awsRouter;
 };
 

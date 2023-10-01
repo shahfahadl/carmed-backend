@@ -3,8 +3,7 @@ const authController = require('../controllers/auth');
 const biddingController = require('../controllers/bidding');
 
 const router = () => {
-    // biddingRouter.route('/example-protected').get(authController.validate, biddingController.postAnOrder);
-    biddingRouter.route('/').post(biddingController.postAnOrder);
+    biddingRouter.post('/', authController.validate, biddingController.postAnOrder);
     return biddingRouter;
 };
 

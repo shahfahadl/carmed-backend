@@ -58,6 +58,12 @@ const loginVendor = async (vendor = {}) => {
 
   if (!validPass) return null;
 
+  if(!!emailExist.blocked){
+    return {
+      blocked: true
+    }
+  }
+
   const token = jwt.sign({ _id: emailExist._id }, process.env.TOKEN_SECRET);
 
   return {

@@ -10,12 +10,14 @@ datasource db {
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   email String @unique
+  type String?
   password String
   name String
   cnic String
   gender String
   profile String
   contact String
+  blocked Boolean?
 }
 
 model Vendor {
@@ -31,6 +33,7 @@ model Vendor {
   profile String
   city String
   latLng Json
+  blocked Boolean?
 }
 
 model Order {
@@ -52,6 +55,7 @@ model Order {
   vendorProfile String
   vendorContact String
   latLng Json
+  createDate DateTime? @default(now())
   time String?
   date String?
 }

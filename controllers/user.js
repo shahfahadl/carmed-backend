@@ -43,6 +43,12 @@ const loginUser = async (req, res, next) => {
     );
 
     const response = await User.loginUser(data);
+    if (!!response?.blocked) {
+      const error = new Error("User Blocked");
+      error.status = 405;
+      error.code = "blocked";
+      throw error;
+    }
 
     res.status(200).json(response);
   } catch (error) {
@@ -130,6 +136,46 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
+const getAllOrders = async (req, res, next) => {
+
+  try {
+    const orders = await User.getAllOrders();
+    res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllUsers = async (req, res, next) => {
+
+  try {
+    const orders = await User.getAllUsers();
+    res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllVendors = async (req, res, next) => {
+
+  try {
+    const orders = await User.getAllVendors();
+    res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateAccount = async (req, res, next) => {
+
+  try {
+    const orders = await User.updateUser(req.body);
+    res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -139,5 +185,9 @@ module.exports = {
   giveRating,
   updateOrder,
   generateOTP,
-  resetPassword
+  resetPassword,
+  getAllOrders,
+  getAllUsers,
+  getAllVendors,
+  updateAccount
 }

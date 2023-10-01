@@ -42,7 +42,7 @@ const createUser = async (user = {}) => {
     },
   });
 
-  const token = jwt.sign({ _id: createdUser._id }, process.env.TOKEN_SECRET);
+  const token = jwt.sign({ id: createdUser.id }, process.env.TOKEN_SECRET);
 
   return {
     ...createdUser,
@@ -61,11 +61,17 @@ const loginUser = async (user = {}) => {
 
   if (!validPass) return null;
 
-  const token = jwt.sign({ _id: emailExist._id }, process.env.TOKEN_SECRET);
+  if(!!emailExist.blocked){
+    return {
+      blocked: true
+    }
+  }
+
+  const token = jwt.sign({ id: emailExist.id }, process.env.TOKEN_SECRET);
 
   return {
-    ...emailExist,
     type: "user",
+    ...emailExist,
     token,
   };
 };
@@ -152,6 +158,45 @@ const acceptRequest = async (order) => {
     });
 
   return dbOrder.id;
+};
+
+const getAllOrders = async () => {
+  const dbOrders = await prisma.order.findMany()
+
+  return dbOrders;
+};
+
+const getAllUsers = async () => {
+  const dbOrders = await prisma.user.findMany()
+
+  return dbOrders;
+};
+
+const getAllVendors = async () => {
+  const dbOrders = await prisma.vendor.findMany()
+
+  return dbOrders;
+};
+
+const updateUser = async (user) => {
+  let updatedAccount = {};
+  if(user.type === 'user'){
+    updatedAccount = await prisma.user.update({
+      where: {email: user.email},
+      data : {
+        blocked: user.blocked
+      }
+    })
+  } else {
+    updatedAccount = await prisma.vendor.update({
+      where: {email: user.email},
+      data : {
+        blocked: user.blocked
+      }
+    })
+  }
+
+  return updatedAccount;
 };
 
 const giveRating = async (order) => {
@@ -260,5 +305,9 @@ module.exports = {
   giveRating,
   updateOrder,
   generateOTP,
-  resetPassword
+  resetPassword,
+  getAllOrders,
+  getAllVendors,
+  getAllUsers,
+  updateUser
 };

@@ -40,6 +40,13 @@ const loginVendor = async (req, res, next) => {
 
     const response = await Vendor.loginVendor(data);
 
+    if (!!response?.blocked) {
+      const error = new Error("User Blocked");
+      error.status = 405;
+      error.code = "blocked";
+      throw error;
+    }
+
     res.status(200).json(response);
   } catch (error) {
     next(error);

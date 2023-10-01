@@ -4,7 +4,7 @@ const authController = require('../controllers/auth');
 
 
 const router = () => {
-    userRouter.post('/', userController.createOrder);
+    userRouter.post('/', userController.createUser);
     userRouter.put('/login', userController.loginUser);
     userRouter.post('/order', authController.validate, userController.createOrder);
     userRouter.post('/updateOrder', authController.validate, userController.updateOrder);

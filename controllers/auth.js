@@ -13,21 +13,20 @@ const validate = async (req, res, next) => {
       } else {
         const decoded = jwt.verify(authorization, process.env.TOKEN_SECRET)
         const id =  decoded?.id;
-        const type = req.headers.type;
         let account = {};
-        if(type === 'user'){
-          account = await prisma.user.findFirst({
+        account = await prisma.user.findFirst({
             where: {
               id
             }
           });
-        } else {
+        if(!account){
           account = await prisma.vendor.findFirst({
             where: {
               id
             }
           })
         }
+
         if(!!account?.blocked){
           const error = new Error("User Blocked");
           error.status = 405;

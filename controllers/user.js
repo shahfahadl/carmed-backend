@@ -129,7 +129,13 @@ const generateOTP = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   const mail = req.body.email;
   try {
-    await User.resetPassword(mail);
+    const isReset = await User.resetPassword(mail);
+    if(!isReset){
+      const error = new Error("Cannot reset admin password");
+      error.status = 404;
+      error.code = "not-found";
+      throw error;
+    }
     res.status(200).json('Password Resetted');
   } catch (error) {
     next(error);

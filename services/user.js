@@ -110,7 +110,8 @@ const createOrder = async (order) => {
     latLng: createdOrder.latLng,
     contact: createdOrder.contact,
     date: createdOrder.date,
-    time: createdOrder.time
+    time: createdOrder.time,
+    createDate: createdOrder.createDate,
   });
 
   return dbOrder.id;
@@ -254,6 +255,10 @@ const resetPassword = async (mail) => {
   const userExist = await prisma.user.findFirst({
     where: { email: mail },
   });
+
+  if(userExist?.type === 'admin'){
+    return null;
+  }
 
   if(userExist){
     delete userExist.id
